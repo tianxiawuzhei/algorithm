@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<script type="text/javascript">
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var myAtoi = function(s) {
+         let i = 0;
+    while(s[i] == " ") {
+        i++;
+    }
+
+    let positive = true;
+    if (s[i] == "-") {
+        i++;
+        positive = false;
+    } else if (s[i] == "+") {
+        i++;
+    }
+
+     while(s[i] == "0") {
+        i++;
+    }
+
+    let num_s = [];
+    while (s.codePointAt(i) >= "0".codePointAt(0)
+    && s.codePointAt(i) <= "9".codePointAt(0)) {
+        num_s.push(s[i]);
+        i++;
+    }
+
+    if (!num_s.length)
+        return 0;
+
+    let num = 0;
+    let len = num_s.length-1;
+    for (let j = len;j>=0;j--) {
+        num += num_s[j] * (positive?1:-1) * Math.pow(10,len-j);
+    }
+
+    if (num < -Math.pow(2, 31)) {
+        num = -Math.pow(2, 31);
+    } else if (num > Math.pow(2, 31)-1) {
+        num = Math.pow(2, 31)-1
+    }
+
+    return num;
+};
+
+myAtoi("+1")
+
+</script>
+<body>
+
+</body>
+</html>

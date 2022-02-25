@@ -5,54 +5,48 @@
 </head>
 <script type="text/javascript">
 /**
- * @param {string} s
- * @return {number}
+ * @param {number} n
+ * @return {string}
  */
-var myAtoi = function(s) {
-         let i = 0;
-    while(s[i] == " ") {
-        i++;
+var countAndSay = function(n) {
+    if (n == 1) {
+        return "1";
     }
-
-    let positive = true;
-    if (s[i] == "-") {
-        i++;
-        positive = false;
-    } else if (s[i] == "+") {
-        i++;
+    if (n == 2) {
+        return "11";
     }
-
-     while(s[i] == "0") {
-        i++;
-    }
-
-    let num_s = [];
-    while (s.codePointAt(i) >= "0".codePointAt(0)
-    && s.codePointAt(i) <= "9".codePointAt(0)) {
-        num_s.push(s[i]);
-        i++;
-    }
-
-    if (!num_s.length)
-        return 0;
-
-    let num = 0;
-    let len = num_s.length-1;
-    for (let j = len;j>=0;j--) {
-        num += num_s[j] * (positive?1:-1) * Math.pow(10,len-j);
-    }
-
-    if (num < -Math.pow(2, 31)) {
-        num = -Math.pow(2, 31);
-    } else if (num > Math.pow(2, 31)-1) {
-        num = Math.pow(2, 31)-1
-    }
-
-    return num;
+    return parseStr(countAndSay(n-1));
 };
 
-myAtoi("+1")
+var parseStr = function(str) {
+    let slow = 0;
+    let fast = 1;
+    let len = str.length;
+    let j = 0;
+    let arr = new Array;
+    while (slow < len || fast < len) {
+        if (str[slow] == str[fast]) {
+            j++;
+            fast++;
+            if (fast == len) {
+                arr.push(fast - slow);
+                arr.push(str[slow]);
+                slow = fast;
+                fast ++;
+            }
+        } else {
+            j=0;
+            arr.push(fast - slow);
+            arr.push(str[slow]);
+            slow = fast;
+            fast ++;
+        }
+    }
+    return arr.join("");
 
+}
+var str = parseStr("1211")
+debugger;
 </script>
 <body>
 

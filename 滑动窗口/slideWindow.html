@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<script type="text/javascript">
+/**
+ * @param {string} s1
+ * @param {string} s2
+ * @return {boolean}
+ */
+var checkInclusion = function(s1, s2) {
+    let need = new Map(), window = new Map();
+    for (let ch of s1) {
+        need.set(ch, (need.get(ch) || 0) + 1);
+    }
+
+    let left = 0, right = 0;
+    let vaild = 0;
+    while(right < s2.length) {
+        let ch_r = s2[right];
+        right++
+        if (need.has(ch_r)) {
+            window.set(ch_r, (need.get(ch_r) || 0) + 1);
+            if (window.get(ch_r) == need.get(ch_r)) {
+                vaild++;
+            }
+        }
+
+        while(right - left >= s1.length) {
+            if (vaild == need.size) {
+                return true;
+            }
+
+            let ch_l = s2[left];
+            left++;
+            if (need.has(ch_l)) {
+                if (window.get(ch_l) == need.get(ch_l)) {
+                    vaild--;
+                }
+
+                window.set(ch_l, window.get(ch_l)-1);
+            }
+        }
+    }
+    return false;
+};
+checkInclusion("ab", "eidbaooo");
+debugger;
+</script>
+<body>
+
+</body>
+</html>

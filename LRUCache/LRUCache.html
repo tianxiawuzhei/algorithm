@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<script type="text/javascript">
+/**
+ * @param {number} capacity
+ */
+var LRUCache = function(capacity) {
+    this._cap = capacity;
+    this._map = new Map();
+    this._cache = new DoubleList();
+};
+
+/**
+ * @param {number} key
+ * @return {number}
+ */
+LRUCache.prototype.get = function(key) {
+    if (this._map.has(key)) {
+        let node = this._map.get(key);
+        this.makeRecently(key);
+        return node._val;
+    } else {
+        return -1;
+    }
+};
+
+/**
+ * @param {number} key
+ * @param {number} value
+ * @return {void}
+ */
+LRUCache.prototype.put = function(key, value) {
+    if (this._map.has(key)) {
+        this.deleteKey(key);
+        this.addRecently(key, value);
+        return;
+    }
+
+    if (this._cap == this._cache.size()) {
+        this.removeLeastRecently();
+    }
+    this.addRecently(key, value);
+};
+
+LRUCache.prototype.makeRecently = function(key) {
+    let node = this._map.get(key);
+    this._cache.remove(node);
+    this._cache.addLast(node);
+}
+
+LRUCache.prototype.addRecently = function(key, value) {
+    let node = new Node(key, value);
+    this._cache.addLast(node);
+    this._map.set(key, node);
+}
+
+LRUCache.prototype.deleteKey = function(key) {
+    let node = this._map.get(key);
+    this._cache.remove(node);
+    this._map.delete(key);
+}
+
+LRUCache.prototype.removeLeastRecently = function() {
+    let node = this._cache.removeFirst();
+    this._map.delete(node._key);
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * var obj = new LRUCache(capacity)
+ * var param_1 = obj.get(key)
+ * obj.put(key,value)
+ */
+
+var Node = function(key, val) {
+    this._key = key;
+    this._val = val;
+    this._next = null;
+    this._prev = null;
+};
+
+var DoubleList = function() {
+    this._head = new Node(0, 0);
+    this._tail = new Node(0, 0);
+    this._head.next = this._tail;
+    this._tail.prev = this._head;
+    this._size = 0;
+};
+
+DoubleList.prototype.addLast = function(node) {
+    node.next = this._tail;
+    node.prev = this._tail.prev;
+
+    this._tail.prev.next = node;
+    this._tail.prev = node;
+
+    this._size++;
+};
+
+DoubleList.prototype.remove = function(node) {
+    node.prev.next = node.next;
+    node.next.prev = node.prev;
+    this._size--;
+};
+
+DoubleList.prototype.removeFirst= function() {
+    if (this._head.next == this._tail)
+        return null;
+
+    let first = this._head.next;
+    this.remove(first);
+    return first;
+};
+
+DoubleList.prototype.size = function() {
+    return this._size;
+};
+
+let lru = new LRUCache(2);
+lru.put(1,1);
+lru.put(2,2);
+lru.get(1);
+lru.put(3,3);
+lru.get(2);
+lru.put(4,4);
+lru.get(1);
+lru.get(3);
+lru.get(4);
+debugger;
+</script>
+<body>
+
+</body>
+</html>
